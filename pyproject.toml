@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "chintamani-sync"
+version = "0.1.0"
+description = ""
+authors = ["Narendranath Gogineni <narenrockstar1@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pygithub = "^2.4.0"
+
