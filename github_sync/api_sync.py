@@ -18,7 +18,7 @@ class GitHubSync:
             print("syncing follower", follower.login)
             json_obj = {'email': follower.email, 'login': follower.login,
                          'name': follower.name, 'bio': follower.bio, 'location': follower.location,
-                         'blog': follower.blog, 'company': follower.company
+                         'blog': follower.blog, 'company': follower.company, 'created_at': follower.created_at.isoformat()
                         }
             follower_node = create_node(data=json_obj, label_key="login")
             res = insert_child(child_label="USER", child_json=follower_node, parent_path="GITHUB.FOLLOWERS", relationship="FOLLOWER")
@@ -29,35 +29,42 @@ class GitHubSync:
     def sync_following(self):
         following = self.g.get_user().get_following()
         for follow in following:
+            print("syncing following", follow.login)
             json_obj = {'email': follow.email, 'login': follow.login,
                          'name': follow.name, 'bio': follow.bio, 'location': follow.location,
-                         'blog': follow.blog, 'company': follow.company
+                         'blog': follow.blog, 'company': follow.company, 'created_at': follow.created_at.isoformat()
                         }
             follower_node = create_node(data=json_obj, label_key="login")
             res = insert_child(child_label="USER", child_json=follower_node, parent_path="GITHUB.FOLLOWING", relationship="FOLLOWING")
             if res.status_code != 200:
                 raise Exception(res.json())
+            print("synced following", follow.login)
 
     def sync_repos(self):
         repos = self.g.get_user().get_repos()
         for repo in repos:
+            print("syncing repo", repo.name)
             json_obj = {'name': repo.name, 'description': repo.description, 'language': repo.language,
                         'created_at': repo.created_at.isoformat()}
             repo_node = create_node(data=json_obj, label_key="name")
             res = insert_child(child_label="REPO", child_json=repo_node, parent_path="GITHUB.REPOS", relationship="REPO")
-
             if res.status_code != 200:
                 raise Exception(res.json())
+            print("synced repo", repo.name)
 
     def sync_starred_repos(self):
+        print("syncing starred repos")
         starred_repos = self.g.get_user().get_starred()
         for repo in starred_repos:
+            print("syncing starred repo", repo.name)
             json_obj = {'name': repo.name, 'description': repo.description, 'language': repo.language,
                         'created_at': repo.created_at.isoformat()}
             repo_node = create_node(data=json_obj, label_key="name")
             res = insert_child(child_label="REPO", child_json=repo_node, parent_path="GITHUB.STARRED_REPOS", relationship="STARRED_REPO")
             if res.status_code != 200:
                 raise Exception(res.json())
+            print("synced starred repo", repo.name)
+        print("synced starred repos")
 
 # Usage:
 # github_sync = GitHubSync()
