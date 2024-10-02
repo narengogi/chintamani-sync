@@ -9,9 +9,13 @@ def sync_github():
     github_sync.sync_starred_repos()
 
 def sync_mozilla():
-    mozilla_sync = SQLiteSync()
-    mozilla_sync.sync_origins()
-    mozilla_sync.exit()
+    try:    
+        mozilla_sync = SQLiteSync()
+        mozilla_sync.sync_origins()
+    except Exception as e:
+        print(e)
+    finally:
+        mozilla_sync.exit()
 
 if __name__ == "__main__":
     # sync_github()
